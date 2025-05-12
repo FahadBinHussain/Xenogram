@@ -52,11 +52,11 @@ export default function AnimatedCursor() {
     const onMouseEnter = (e: MouseEvent) => {
       const target = e.target as HTMLElement
       
-      if (target.tagName === 'A' || 
+      if (target instanceof Element && (target.tagName === 'A' || 
           target.tagName === 'BUTTON' || 
           target.closest('a') || 
           target.closest('button') ||
-          target.classList.contains('interactive')) {
+          target.classList.contains('interactive'))) {
         
         gsap.to(cursor, {
           scale: 1.5,
@@ -76,11 +76,11 @@ export default function AnimatedCursor() {
     const onMouseLeave = (e: MouseEvent) => {
       const target = e.target as HTMLElement
       
-      if (target.tagName === 'A' || 
+      if (target instanceof Element && (target.tagName === 'A' || 
           target.tagName === 'BUTTON' || 
           target.closest('a') || 
           target.closest('button') ||
-          target.classList.contains('interactive')) {
+          target.classList.contains('interactive'))) {
         
         gsap.to(cursor, {
           scale: 1,
