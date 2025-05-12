@@ -6,7 +6,7 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import EmailProvider from "next-auth/providers/email";
+// import EmailProvider from "next-auth/providers/email"; // Email provider commented out
 import { getServerSession as getServerSessionApprouter } from "next-auth/next";
 
 import { prisma } from "@/server/db";
@@ -21,8 +21,15 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
+      // ...other properties
+      // role: UserRole;
     };
   }
+
+  // interface User {
+  //   // ...other properties
+  //   // role: UserRole;
+  // }
 }
 
 /**
@@ -46,11 +53,18 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
-    EmailProvider({
-      server: process.env.EMAIL_SERVER || "",
-      from: process.env.EMAIL_FROM || "no-reply@familytree.app",
-    }),
+    // EmailProvider({
+    //   server: process.env.EMAIL_SERVER || "", // Ensure EMAIL_SERVER is set in .env
+    //   from: process.env.EMAIL_FROM || "no-reply@example.com", // Ensure EMAIL_FROM is set in .env
+    // }),
   ],
+  pages: {
+    signIn: '/auth/signin', // Using our custom sign-in page
+    // signOut: '/auth/signout',
+    // error: '/auth/error', // Error code passed in query string as ?error=
+    // verifyRequest: '/auth/verify-request', // (Email provider) Used for check email page
+    // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out to disable)
+  }
 };
 
 /**
@@ -66,4 +80,4 @@ export const getServerAuthSession = (ctx: {
 };
 
 // Export Next.js App Router compatible auth function
-export const auth = () => getServerSessionApprouter(authOptions); 
+export const auth = () => getServerSessionApprouter(authOptions);
