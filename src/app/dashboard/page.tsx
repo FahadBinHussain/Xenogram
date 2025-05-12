@@ -5,6 +5,7 @@ import { prisma } from '@/server/db'
 import DashboardHeader from '@/components/DashboardHeader'
 import FamilyTreeList from '@/components/FamilyTreeList'
 import CreateFamilyTreeButton from '@/components/CreateFamilyTreeButton'
+import AnimatedDashboardIntro from '@/components/AnimatedDashboardIntro'
 
 export default async function Dashboard() {
   const session = await auth();
@@ -35,13 +36,7 @@ export default async function Dashboard() {
         </div>
         
         {familyTrees.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Welcome to Your Family Tree Dashboard</h2>
-            <p className="text-gray-600 mb-8 max-w-lg mx-auto">
-              You haven't created any family trees yet. Get started by creating your first family tree.
-            </p>
-            <CreateFamilyTreeButton variant="large" />
-          </div>
+          <AnimatedDashboardIntro />
         ) : (
           <FamilyTreeList familyTrees={familyTrees} />
         )}
