@@ -6,6 +6,7 @@ import DashboardHeader from '@/components/DashboardHeader'
 import FamilyTreeList from '@/components/FamilyTreeList'
 import CreateFamilyTreeButton from '@/components/CreateFamilyTreeButton'
 import AnimatedDashboardIntro from '@/components/AnimatedDashboardIntro'
+import AnimatedCursor from '@/components/AnimatedCursor'
 
 export default async function Dashboard() {
   const session = await auth();
@@ -27,6 +28,9 @@ export default async function Dashboard() {
   
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Custom Cursor */}
+      <AnimatedCursor />
+      
       <DashboardHeader />
       
       <main className="container mx-auto px-6 py-8">
