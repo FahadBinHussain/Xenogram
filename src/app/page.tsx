@@ -6,6 +6,7 @@ import AnimatedFeaturesSection from '@/components/AnimatedFeaturesSection'
 import ScrollAnimatedSection from '@/components/ScrollAnimatedSection'
 import SmoothScroll from '@/components/SmoothScroll'
 import AnimatedCursor from '@/components/AnimatedCursor'
+import ParallaxBackgroundEffect from '@/components/ParallaxBackgroundEffect'
 
 export default async function Home() {
   const session = await auth();
@@ -22,6 +23,9 @@ export default async function Home() {
       
       {/* Smooth Scrolling Wrapper */}
       <SmoothScroll>
+        {/* Animated Background Effect */}
+        <ParallaxBackgroundEffect />
+        
         {/* Hero Section - Now with animations */}
         <AnimatedHero />
 
