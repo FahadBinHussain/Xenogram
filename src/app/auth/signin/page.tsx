@@ -1,11 +1,20 @@
 'use client'
 
 import { signIn, useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
+import { redirect, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 
 export default function SignInPage() {
   const { data: session, status } = useSession()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const error = searchParams.get('error')
+    if (error) {
+      console.error('Sign-in error from NextAuth:', error)
+      // You could display this error to the user if desired
+    }
+  }, [searchParams])
 
   useEffect(() => {
     if (status === 'authenticated') {

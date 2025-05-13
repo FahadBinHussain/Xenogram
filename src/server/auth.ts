@@ -4,6 +4,10 @@ import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
+  type User,
+  type Account,
+  type Profile,
+  type Session as NextAuthSession // Renamed to avoid conflict with module augmentation
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 // import EmailProvider from "next-auth/providers/email"; // Email provider commented out
@@ -39,7 +43,18 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
+    async signIn({ user, account, profile }: { user: User; account: Account | null; profile?: Profile }) {
+      console.log("[NextAuth Callback] signIn: Triggered");
+      console.log("[NextAuth Callback] signIn User:", JSON.stringify(user, null, 2));
+      console.log("[NextAuth Callback] signIn Account:", JSON.stringify(account, null, 2));
+      console.log("[NextAuth Callback] signIn Profile:", JSON.stringify(profile, null, 2));
+      // Basic check for OAuth
+      if (account && profile) { // For OAuth providers like Google, account and profile should exist
+        console.log("[NextAuth Callback] signIn: OAuth account detected, proceeding.");
+      }
+      return true; // Allow sign-in to proceed
+    },
+    session: ({ session, user }: { session: NextAuthSession; user: User }) => ({ // Use NextAuthSession here
       ...session,
       user: {
         ...session.user,
@@ -64,7 +79,30 @@ export const authOptions: NextAuthOptions = {
     // error: '/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // (Email provider) Used for check email page
     // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out to disable)
-  }
+  },
+  events: {
+    async signIn(message: { user: User; account: Account | null; profile?: Profile; isNewUser?: boolean }) {
+      console.log("NextAuth Event: signIn success", JSON.stringify(message, null, 2));
+    },
+    async signOut(message: { session?: NextAuthSession; token?: any /* JWT */ }) { // Use NextAuthSession here
+      console.log("NextAuth Event: signOut", JSON.stringify(message, null, 2));
+    },
+    async createUser(message: { user: User }) {
+      console.log("NextAuth Event: createUser", JSON.stringify(message, null, 2));
+    },
+    async updateUser(message: { user: User }) {
+      console.log("NextAuth Event: updateUser", JSON.stringify(message, null, 2));
+    },
+    async linkAccount(message: { user: User; account: Account; profile: User }) { // Changed Profile to User
+      console.log("NextAuth Event: linkAccount", JSON.stringify(message, null, 2));
+    },
+    async session(message: { session: NextAuthSession; token?: any /* JWT */}) { // Use NextAuthSession here
+      // This can be very verbose, enable if specifically needed
+      // console.log("NextAuth Event: session", JSON.stringify(message, null, 2));
+    }
+    // Removed the non-standard 'error' event. 'debug: true' will provide error details.
+  },
+  debug: process.env.NODE_ENV === 'development',
 };
 
 /**
