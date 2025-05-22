@@ -48,11 +48,26 @@ export const authOptions: NextAuthOptions = {
       console.log("[NextAuth Callback] signIn User:", JSON.stringify(user, null, 2));
       console.log("[NextAuth Callback] signIn Account:", JSON.stringify(account, null, 2));
       console.log("[NextAuth Callback] signIn Profile:", JSON.stringify(profile, null, 2));
+      
+      // Additional debugging information
+      console.log("[NextAuth Callback] Environment check:");
+      console.log("- NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+      console.log("- NODE_ENV:", process.env.NODE_ENV);
+      console.log("- Google Provider configured:", !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET);
+      
       // Basic check for OAuth
       if (account && profile) { // For OAuth providers like Google, account and profile should exist
         console.log("[NextAuth Callback] signIn: OAuth account detected, proceeding.");
+        return true;
       }
-      return true; // Allow sign-in to proceed
+      
+      // If we reach here and it's an OAuth flow (Google provider), something went wrong
+      if (!account && user.email) {
+        console.error("[NextAuth Callback] signIn: OAuth account missing but user email exists. Possible callback configuration issue.");
+        return false;
+      }
+      
+      return true; // Allow sign-in to proceed for other cases
     },
     session: ({ session, user }: { session: NextAuthSession; user: User }) => ({ // Use NextAuthSession here
       ...session,
