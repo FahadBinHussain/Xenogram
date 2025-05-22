@@ -55,19 +55,36 @@ export const authOptions: NextAuthOptions = {
       console.log("- NODE_ENV:", process.env.NODE_ENV);
       console.log("- Google Provider configured:", !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET);
       
-      // Basic check for OAuth
-      if (account && profile) { // For OAuth providers like Google, account and profile should exist
-        console.log("[NextAuth Callback] signIn: OAuth account detected, proceeding.");
+      if (account?.provider === "google") {
+        console.log("[NextAuth Callback] signIn: Google provider detected.");
+        if (profile && account.access_token) { // For Google, profile and access_token should exist
+          console.log("[NextAuth Callback] signIn: Google profile and access_token found. Proceeding.");
+          return true;
+        } else {
+          console.error("[NextAuth Callback] signIn: Google sign-in error. Profile or access_token missing.");
+          console.error("[NextAuth Callback] signIn: Ensure Google Cloud Console redirect URIs are correctly set to e.g., http://localhost:3000/api/auth/callback/google");
+          console.error("[NextAuth Callback] signIn: Also ensure NEXTAUTH_URL (or AUTH_URL) is correctly set in your .env file.");
+          return false; // Block sign-in if essential Google OAuth data is missing
+        }
+      }
+      
+      // Fallback for other providers or flows if you add them later (e.g., email)
+      // Basic check for general OAuth (if not Google, which is handled above)
+      if (account && profile) { 
+        console.log("[NextAuth Callback] signIn: Non-Google OAuth account detected, proceeding.");
         return true;
       }
       
-      // If we reach here and it's an OAuth flow (Google provider), something went wrong
+      // If it's not an OAuth flow (e.g. credentials, or an unhandled OAuth provider)
+      // and it somehow reaches here without an account, it's an issue.
       if (!account && user.email) {
-        console.error("[NextAuth Callback] signIn: OAuth account missing but user email exists. Possible callback configuration issue.");
-        return false;
+         console.error("[NextAuth Callback] signIn: Account details missing but user email exists. This could indicate a misconfiguration or an unexpected flow for a non-Google OAuth provider if one was intended.");
+         // Depending on your setup, you might want to return false here.
+         // For now, we'll let it pass to see if NextAuth handles it, but log an error.
       }
       
-      return true; // Allow sign-in to proceed for other cases
+      console.log("[NextAuth Callback] signIn: Proceeding with default sign-in logic.");
+      return true; // Allow sign-in to proceed by default for other cases not explicitly handled
     },
     session: ({ session, user }: { session: NextAuthSession; user: User }) => ({ // Use NextAuthSession here
       ...session,
