@@ -1,5 +1,9 @@
 # Family Tree Application
 
+<img src="https://wakapi-qt1b.onrender.com/api/badge/fahad/interval:any/project:Xenogram" 
+     alt="Wakapi Time Tracking" 
+     title="Spent more than that amount of time spent on this project">
+
 A modern full-stack application for creating, visualizing, and sharing family trees built with Next.js, TypeScript, Prisma, tRPC, and TailwindCSS.
 
 ## Features
