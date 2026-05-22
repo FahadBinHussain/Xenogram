@@ -112,3 +112,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [tRPC](https://trpc.io/)
 - [TailwindCSS](https://tailwindcss.com/)
 - [NextAuth.js](https://next-auth.js.org/)
+
+## Contributors
+
+<a href="https://github.com/FahadBinHussain/xenogram/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=FahadBinHussain/xenogram" alt="Contributors" />
+</a>
