@@ -4,6 +4,10 @@
      alt="Wakapi Time Tracking" 
      title="Spent more than that amount of time spent on this project">
 
+## Maintenance Status
+
+This project is not actively maintained now. It remains public as a reference/portfolio project, but new features, fixes, and support are not currently planned.
+
 A modern full-stack application for creating, visualizing, and sharing family trees built with Next.js, TypeScript, Prisma, tRPC, and TailwindCSS.
 
 ## Features
